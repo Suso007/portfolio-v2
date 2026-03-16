@@ -1,0 +1,180 @@
+.icons-section {
+  position: fixed;
+  max-width: var(--cMaxWidth);
+  width: var(--cWidth);
+  bottom: 0;
+  z-index: 99;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ── Social icon column ── */
+.social-icons {
+  position: absolute;
+  left: -20px;
+  bottom: 20px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 999;
+  padding: 10px;
+}
+
+/* Each icon wrapper — provides the movable anchor point */
+.social-icon-span {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+}
+
+/* The actual icon link — floats to mouse position */
+.social-icon-span a {
+  --siLeft: 50%;
+  --siTop: 50%;
+  position: absolute;
+  left: var(--siLeft, 50%);
+  top: var(--siTop, 50%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  font-size: 23px;
+  will-change: left, top;
+  transition: color 0.25s ease, filter 0.3s ease, transform 0.3s ease;
+  color: #ccc;
+  border-radius: 50%;
+}
+
+/* Per-icon colored glow — only affects the hovered icon */
+.social-icon-span:hover a {
+  color: var(--icon-color);
+  filter: drop-shadow(0 0 8px var(--icon-color));
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* ── Resume button ── */
+.resume-button {
+  position: absolute;
+  z-index: 99;
+  display: flex;
+  gap: 5px;
+  bottom: 40px;
+  right: 0;
+  width: auto;
+  text-wrap: nowrap;
+  letter-spacing: 4px;
+  font-size: 15px;
+  line-height: 15px;
+  font-weight: 600;
+  color: #5e5e5e;
+  cursor: pointer;
+  transition: 0.5s;
+  transform-origin: left bottom;
+  transform: translateX(100%) rotateZ(-90deg);
+}
+
+.resume-button:hover {
+  color: #fff;
+}
+
+.resume-button>span {
+  color: #fff;
+  font-size: 17px;
+  margin-top: -1px;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Resume dropdown popup ── */
+.resume-dropdown {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  background: rgba(15, 18, 32, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 10px;
+  backdrop-filter: blur(10px);
+  animation: dropdownFadeIn 0.18s ease forwards;
+  transform: rotateZ(90deg);
+  transform-origin: bottom right;
+  white-space: nowrap;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: rotateZ(90deg) translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotateZ(90deg) translateY(0);
+  }
+}
+
+.resume-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  color: #ccc;
+  padding: 6px 10px;
+  border-radius: 7px;
+  transition: background 0.2s, color 0.2s;
+  text-transform: uppercase;
+}
+
+.resume-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--accentColor);
+}
+
+.resume-dropdown-item svg {
+  font-size: 15px;
+}
+
+@media only screen and (min-width: 900px) {
+  .social-icons {
+    display: flex;
+    gap: 20px;
+  }
+
+  .social-icon-span a {
+    font-size: 28px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .resume-button {
+    transform: none;
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  .resume-button>span {
+    font-size: 23px;
+    margin-top: -1.5px;
+  }
+
+  .resume-dropdown {
+    transform: none;
+    animation: dropdownFadeInFlat 0.18s ease forwards;
+  }
+
+  @keyframes dropdownFadeInFlat {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
