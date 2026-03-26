@@ -9,44 +9,52 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const Work = () => {
   useGSAP(() => {
-    let translateX: number = 0;
+    // matchMedia allows us to only run this GSAP animation on desktop
+    let mm = gsap.matchMedia();
 
-    function setTranslateX() {
-      const box = document.getElementsByClassName("work-box");
-      if (!box.length) return;
-      const rectLeft = document
-        .querySelector(".work-container")!
-        .getBoundingClientRect().left;
-      const rect = box[0].getBoundingClientRect();
-      const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
-      const padding = parseInt(window.getComputedStyle(box[0]).padding) / 2;
-      translateX =
-        rect.width * box.length - (rectLeft + parentWidth) + padding;
-    }
+    mm.add("(min-width: 1025px)", () => {
+      let translateX: number = 0;
 
-    setTranslateX();
+      function setTranslateX() {
+        const box = document.getElementsByClassName("work-box");
+        if (!box.length) return;
+        const rectLeft = document
+          .querySelector(".work-container")!
+          .getBoundingClientRect().left;
+        const rect = box[0].getBoundingClientRect();
+        const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
+        const padding = parseInt(window.getComputedStyle(box[0]).padding) / 2;
+        translateX =
+          rect.width * box.length - (rectLeft + parentWidth) + padding;
+      }
 
-    const timeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".work-section",
-        start: "top top",
-        end: `+=${translateX}`,
-        scrub: true,
-        pin: true,
-        anticipatePin: 1,
-        id: "work",
-      },
+      setTranslateX();
+
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".work-section",
+          start: "top top",
+          end: `+=${translateX}`,
+          scrub: true,
+          pin: true,
+          anticipatePin: 1,
+          id: "work",
+        },
+      });
+
+      timeline.to(".work-flex", {
+        x: -translateX,
+        ease: "none",
+      });
+
+      return () => {
+        timeline.kill();
+        ScrollTrigger.getById("work")?.kill();
+      };
     });
 
-    timeline.to(".work-flex", {
-      x: -translateX,
-      ease: "none",
-    });
-
-    return () => {
-      timeline.kill();
-      ScrollTrigger.getById("work")?.kill();
-    };
+    // Cleanup matchMedia on unmount
+    return () => mm.revert();
   }, []);
 
   return (
@@ -68,6 +76,11 @@ const Work = () => {
                 </div>
                 <h4>Tools &amp; Features</h4>
                 <p>{project.tools}</p>
+
+                {/* NEW: View Details Link */}
+                <a href={project.link || "#"} className="view-details-btn">
+                  View Details &rarr;
+                </a>
               </div>
               <WorkImage image={project.image} alt={project.title} />
             </div>
