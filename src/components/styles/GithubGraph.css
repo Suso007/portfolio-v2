@@ -1,0 +1,70 @@
+/* GithubGraph.css */
+
+.github-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    place-items: center;
+    justify-content: center;
+    position: relative;
+    opacity: 1;
+    height: auto;
+    margin: auto;
+    padding: 0px;
+    /* Slightly adjusted padding so it flows nicely */
+}
+
+.github-section h2 {
+    font-size: 70px;
+    line-height: 70px;
+    font-weight: 400;
+    text-align: center;
+    background: linear-gradient(0deg, #0d9488, #ffffff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-top: 20px;
+    margin-bottom: 70px;
+}
+
+.github-section h2>span {
+    font-family: "Geist", sans-serif;
+    font-weight: 300;
+}
+
+/* --- Responsive Styles for Header --- */
+
+@media only screen and (max-width: 1400px) {
+    .github-section h2 {
+        font-size: 50px;
+        line-height: 50px;
+    }
+}
+
+@media only screen and (max-width: 1025px) {
+    .github-section {
+        padding: 70px 0px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .github-section {
+        padding-top: 50px;
+        align-items: center;
+        /* Keep it centered on mobile for the graph */
+    }
+
+    .github-section h2 {
+        width: 100%;
+        font-size: 45px;
+        line-height: 45px;
+        margin-top: 0px;
+    }
+
+    /* Make sure the calendar wrapper scrolls horizontally on tiny screens */
+    .github-graph-container {
+        max-width: 90vw;
+        overflow-x: auto;
+    }
+}
