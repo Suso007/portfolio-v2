@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { useRef, useMemo, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
+import { Environment, Decal } from "@react-three/drei";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import {
   BallCollider,
@@ -50,11 +50,14 @@ function createIconTexture(
   iconKey: string,
   bgColor: string
 ): THREE.CanvasTexture {
-  const size = 128;
+  const size = 256; // Increased resolution for crisper decals
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext("2d")!;
+
+  // Clear canvas to ensure corners outside the circle remain transparent
+  ctx.clearRect(0, 0, size, size);
 
   // Background circle
   ctx.beginPath();
@@ -69,7 +72,7 @@ function createIconTexture(
     try {
       svgString = renderToStaticMarkup(
         jsx(IconComponent as React.ComponentType<{ size?: number; color?: string }>, {
-          size: 80,
+          size: 140, // Scaled up to match new canvas size
           color: "#ffffff",
         })
       );
@@ -78,27 +81,30 @@ function createIconTexture(
     }
   }
 
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.anisotropy = 16; // Improves texture quality at sharp angles
+
   if (svgString) {
     const blob = new Blob([svgString], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
     const img = new Image();
     img.onload = () => {
-      ctx.drawImage(img, (size - 80) / 2, (size - 80) / 2, 80, 80);
+      ctx.drawImage(img, (size - 140) / 2, (size - 140) / 2, 140, 140);
       URL.revokeObjectURL(url);
       texture.needsUpdate = true;
     };
     img.src = url;
   }
 
-  const texture = new THREE.CanvasTexture(canvas);
   return texture;
 }
 
-const textures = techStackIcons.map((t) =>
-  createIconTexture(t.icon, t.color)
-);
+const textures = techStackIcons.map((t) => ({
+  texture: createIconTexture(t.icon, t.color),
+  color: t.color,
+}));
 
-const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 
 const spheres = [...Array(techStackIcons.length * 2 + 6)].map(() => ({
   scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
@@ -108,7 +114,8 @@ type SphereProps = {
   vec?: THREE.Vector3;
   scale: number;
   r?: typeof THREE.MathUtils.randFloatSpread;
-  material: THREE.MeshPhysicalMaterial;
+  texture: THREE.CanvasTexture;
+  color: string;
   isActive: boolean;
 };
 
@@ -116,7 +123,8 @@ function SphereGeo({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
-  material,
+  texture,
+  color,
   isActive,
 }: SphereProps) {
   const api = useRef<RapierRigidBody | null>(null);
@@ -153,14 +161,29 @@ function SphereGeo({
         position={[0, 0, 1.2 * scale]}
         args={[0.15 * scale, 0.275 * scale]}
       />
-      <mesh
-        castShadow
-        receiveShadow
-        scale={scale}
-        geometry={sphereGeometry}
-        material={material}
-        rotation={[0.3, 1, 1]}
-      />
+      <mesh castShadow receiveShadow scale={scale} geometry={sphereGeometry}>
+        {/* Base Material of the Ball (Dark grey plastic look) */}
+        <meshPhysicalMaterial
+          color="#fff"
+          metalness={0.2}
+          roughness={0.4}
+          clearcoat={0.3}
+        />
+
+        {/* The Icon Badge projected perfectly onto the Z-face of the ball */}
+        <Decal position={[0, 0, 1]} rotation={[0, 0, 0]} scale={1.4}>
+          <meshPhysicalMaterial
+            map={texture}
+            transparent
+            polygonOffset
+            polygonOffsetFactor={-1}
+            emissive={color}
+            emissiveIntensity={0.4} // Adds a subtle glow to the badge
+            roughness={0.2}
+            metalness={0.8}
+          />
+        </Decal>
+      </mesh>
     </RigidBody>
   );
 }
@@ -226,21 +249,6 @@ const TechStack = () => {
     };
   }, []);
 
-  const materials = useMemo(() => {
-    return textures.map(
-      (texture) =>
-        new THREE.MeshPhysicalMaterial({
-          map: texture,
-          emissive: "#ffffff",
-          emissiveMap: texture,
-          emissiveIntensity: 0.3,
-          metalness: 0.5,
-          roughness: 1,
-          clearcoat: 0.1,
-        })
-    );
-  }, []);
-
   return (
     <div className="techstack">
       <h2> My Techstack</h2>
@@ -264,14 +272,19 @@ const TechStack = () => {
         <directionalLight position={[0, 5, -4]} intensity={2} />
         <Physics gravity={[0, 0, 0]}>
           <Pointer isActive={isActive} />
-          {spheres.map((props, i) => (
-            <SphereGeo
-              key={i}
-              {...props}
-              material={materials[Math.floor(Math.random() * materials.length)]}
-              isActive={isActive}
-            />
-          ))}
+          {spheres.map((props, i) => {
+            // Using modulo to cycle through the textures evenly
+            const item = textures[i % textures.length];
+            return (
+              <SphereGeo
+                key={i}
+                {...props}
+                texture={item.texture}
+                color={item.color}
+                isActive={isActive}
+              />
+            );
+          })}
         </Physics>
         <Environment
           files="/models/char_enviorment.hdr"

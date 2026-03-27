@@ -6,8 +6,7 @@ import {
 } from "react-icons/fa6";
 import "./styles/SocialIcons.css";
 import { TbNotes } from "react-icons/tb";
-import { HiOutlineEye, HiArrowDownTray } from "react-icons/hi2";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HoverLinks from "./HoverLinks";
 import { socialIconLinks, profile } from "../myData/data";
 
@@ -20,8 +19,6 @@ const socialIcons = [
 ];
 
 const SocialIcons = () => {
-  const [resumeHovered, setResumeHovered] = useState(false);
-
   useEffect(() => {
     const social = document.getElementById("social") as HTMLElement;
 
@@ -77,48 +74,25 @@ const SocialIcons = () => {
             className="social-icon-span"
             style={{ "--icon-color": color } as React.CSSProperties}
           >
-            <a href={href} target="_blank">
+            <a href={href} target="_blank" rel="noopener noreferrer">
               <Icon />
             </a>
           </span>
         ))}
       </div>
 
-      {/* Resume button with view / download dropdown */}
-      <div
+      {/* Resume button directly linking to the URL */}
+      <a
+        href={profile.resumeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         className="resume-button"
-        onMouseEnter={() => setResumeHovered(true)}
-        onMouseLeave={() => setResumeHovered(false)}
       >
         <HoverLinks text="RESUME" />
         <span>
           <TbNotes />
         </span>
-
-        {resumeHovered && (
-          <div className="resume-dropdown">
-            <a
-              href={profile.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="resume-dropdown-item"
-              data-cursor="disable"
-            >
-              <HiOutlineEye />
-              <span>View</span>
-            </a>
-            <a
-              href={profile.resumeUrl}
-              download
-              className="resume-dropdown-item"
-              data-cursor="disable"
-            >
-              <HiArrowDownTray />
-              <span>Download</span>
-            </a>
-          </div>
-        )}
-      </div>
+      </a>
     </div>
   );
 };

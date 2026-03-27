@@ -1,0 +1,191 @@
+/* StackOfTechnology.css */
+
+.tech-stack-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.tech-stack-wrapper {
+    position: relative;
+    max-width: 1024px;
+    width: 100%;
+
+    /* Mobile-first layout for the wrapper */
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* =========================================
+   Mobile First (Default) Styles 
+========================================= */
+
+/* On mobile, place the title cleanly at the top */
+.central-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 20;
+}
+
+.central-text {
+    color: #ffffff;
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    line-height: 1.2;
+    margin: 0;
+}
+
+/* Stack cards vertically */
+.tech-stack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.quadrant-card {
+    position: relative;
+    border: 1px solid #0dffff;
+    background-color: #0d1420;
+    padding: 2.5rem 1.5rem 1.5rem;
+    /* Extra top padding for the absolute badge */
+    border-radius: 1.5rem;
+    /* Standard radius for mobile */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.category-badge {
+    position: absolute;
+    top: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    padding: 0.375rem 1.5rem;
+    border-radius: 9999px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.category-title {
+    color: #ff6b81;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.icons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 2rem;
+    column-gap: 1rem;
+    margin-top: 1rem;
+}
+
+.icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    cursor: pointer;
+}
+
+.icon-svg-wrapper {
+    margin-bottom: 0.75rem;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.icon-item:hover .icon-svg-wrapper {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+}
+
+.icon-name {
+    color: #d1d5db;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: pre-line;
+    line-height: 1.25;
+}
+
+/* Handle extra small mobile screens (like iPhone SE) */
+@media (max-width: 400px) {
+    .icons-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* =========================================
+   Tablet and Desktop Styles 
+========================================= */
+@media (min-width: 768px) {
+    .tech-stack-wrapper {
+        display: block;
+        /* Reset wrapper from flex layout */
+        padding: 0 1rem;
+    }
+
+    /* Create the 2x2 grid */
+    .tech-stack-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .quadrant-card {
+        min-height: 300px;
+        padding: 2rem;
+    }
+
+    /* Apply the custom inner-circle corner cutouts */
+    .quadrant-tl {
+        border-radius: 1.5rem 1.5rem 1.5rem 140px;
+    }
+
+    .quadrant-tr {
+        border-radius: 1.5rem 1.5rem 140px 1.5rem;
+    }
+
+    .quadrant-bl {
+        border-radius: 1.5rem 140px 1.5rem 1.5rem;
+    }
+
+    .quadrant-br {
+        border-radius: 140px 1.5rem 1.5rem 1.5rem;
+    }
+
+    /* Transform Title back to the absolute central masking circle */
+    .central-circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 13rem;
+        height: 13rem;
+        background-color: #111827;
+        /* Matches container to "mask" the intersection */
+        border-radius: 50%;
+        pointer-events: none;
+
+        /* Reset internal alignment */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .central-text {
+        font-size: 1.875rem;
+    }
+
+    .icons-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
