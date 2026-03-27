@@ -15,8 +15,12 @@ const Contact = () => {
                 {contactData.email}
               </a>
             </p>
-            <h4>Education</h4>
-            <p>{contactData.education}</p>
+            <h4>Phone</h4>
+            <p>
+              <a href={`tel:${contactData.phone}`} data-cursor="disable">
+                {contactData.phone}
+              </a>
+            </p>
           </div>
           <div className="contact-box">
             <h4>Social</h4>

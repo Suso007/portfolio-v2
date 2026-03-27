@@ -14,7 +14,7 @@ export const profile = {
   title: "Full Stack",
   roles: ["Developer", "Engineer"],
   email: "susovanpal9000980@gmail.com",
-  phone: "91 6291825006",
+  phone: "+91 6291825006",
   resumeUrl: "/resume.pdf",
   copyrightYear: new Date().getFullYear().toString(),
 };
