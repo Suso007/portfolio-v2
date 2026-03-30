@@ -75,7 +75,7 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a data-href="#blog" href="#blog">
+            <a href="https://blogs.susovan.in" target="_blank" rel="noopener noreferrer">
               <HoverLinks text="BLOG" />
             </a>
           </li>
