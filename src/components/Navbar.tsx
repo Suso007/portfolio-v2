@@ -29,10 +29,12 @@ const Navbar = () => {
     links.forEach((elem) => {
       let element = elem as HTMLAnchorElement;
       element.addEventListener("click", (e) => {
-        if (window.innerWidth > 1024) {
+        let targetElem = e.currentTarget as HTMLAnchorElement;
+        let section = targetElem.getAttribute("data-href");
+
+        // Only prevent default and scroll IF it's an internal link with a data-href
+        if (section && window.innerWidth > 1024) {
           e.preventDefault();
-          let elem = e.currentTarget as HTMLAnchorElement;
-          let section = elem.getAttribute("data-href");
           smoother.scrollTo(section, true, "top top");
         }
       });
