@@ -11,7 +11,7 @@ const GithubGraph = () => {
     return (
         <div className="github-section">
             {/* The span triggers the lighter font-weight from your CSS */}
-            <h2>Days I <span>Code</span></h2>
+            <h2>Commits Over Time</h2>
 
             <div className="github-graph-container p-6 bg-[#0d1420] border border-[#ff6b81] rounded-2xl shadow-lg">
                 <GitHubCalendar
