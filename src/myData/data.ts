@@ -158,6 +158,13 @@ export const projectsData = [
     image: "/images/product-mockup.png",
     link: "https://github.com/Suso007/image-mockup",
   },
+  {
+    title: "Secure Document Vault",
+    category: "Web application",
+    tools: "Next.js (SSR + CSR hybrid), Cloudflare R2 (storage), Encryption (AES-256-GCM), Hashing (argon2), Cloudflare Worker (serverless logic), JWT (authentication), Clerk (authentication)",
+    image: "/images/vaultbox.png",
+    link: "https://docs.susovan.in",
+  },
 ];
 
 // ----------------------------
