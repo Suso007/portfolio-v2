@@ -148,14 +148,14 @@ export const projectsData = [
     title: "Biometric Data Collection Microservice",
     category: "Microservices",
     tools: "Node.js, Express (microservice framework), PostgreSQL/Any db configurable (storage + partitioning), Redis (queue broker), Bull Queue (async jobs, retries, recovery pipelines)",
-    image: "/images/data-collector.png",
+    image: "/images/project-placeholder.svg",
     link: "https://github.com/Suso007/biolog-collector",
   },
   {
     title: "AI-powered Product Mockup Image Generator",
     category: "AI-powered Product",
     tools: "Next.js (SSR + CSR hybrid), Google GenAI (Gemini 2.5 Flash Image), image processing pipelines, batch processing workflows",
-    image: "/images/product-mockup.png",
+    image: "/images/project-placeholder.svg",
     link: "https://github.com/Suso007/image-mockup",
   },
   {

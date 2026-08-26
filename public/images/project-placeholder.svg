@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-label="Project preview coming soon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#11141c"/>
+      <stop offset="55%" stop-color="#0b080c"/>
+      <stop offset="100%" stop-color="#0d1a1e"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c2a4ff" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity=".45"/>
+    </linearGradient>
+    <linearGradient id="text" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#eae5ec"/>
+      <stop offset="100%" stop-color="#67e8f9"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity=".045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="675" rx="16" fill="url(#bg)"/>
+  <rect width="1200" height="675" rx="16" fill="url(#grid)"/>
+  <rect width="1200" height="675" rx="16" fill="url(#glow)"/>
+  <rect x=".75" y=".75" width="1198.5" height="673.5" rx="15.25" fill="none" stroke="url(#stroke)" stroke-width="1.5"/>
+
+  <g transform="translate(600 286)" fill="none" stroke="#2dd4bf" stroke-opacity=".85" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-104 -34 L-146 0 L-104 34"/>
+    <path d="M104 -34 L146 0 L104 34"/>
+    <path d="M-30 46 L30 -46" stroke="#c2a4ff" stroke-opacity=".8"/>
+  </g>
+
+  <text x="600" y="424" text-anchor="middle" font-family="Geist, Inter, system-ui, -apple-system, Segoe UI, sans-serif"
+        font-size="42" font-weight="600" letter-spacing="1" fill="url(#text)">Preview coming soon</text>
+  <text x="600" y="470" text-anchor="middle" font-family="Geist, Inter, system-ui, -apple-system, Segoe UI, sans-serif"
+        font-size="21" font-weight="300" letter-spacing="4" fill="#adacac">VIEW THE SOURCE ON GITHUB</text>
+</svg>

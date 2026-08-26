@@ -1,34 +1,24 @@
 import { useState } from "react";
 import { MdArrowOutward } from "react-icons/md";
 
+const FALLBACK_IMAGE = "/images/project-placeholder.svg";
+
 interface Props {
   image: string;
   alt?: string;
-  video?: string;
   link?: string;
 }
 
 const WorkImage = (props: Props) => {
-  const [isVideo, setIsVideo] = useState(false);
-  const [video, setVideo] = useState("");
-  const handleMouseEnter = async () => {
-    if (props.video) {
-      setIsVideo(true);
-      const response = await fetch(`src/assets/${props.video}`);
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      setVideo(blobUrl);
-    }
-  };
+  const [src, setSrc] = useState(props.image);
 
   return (
     <div className="work-image">
       <a
         className="work-image-in"
         href={props.link}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={() => setIsVideo(false)}
         target="_blank"
+        rel="noopener noreferrer"
         data-cursor={"disable"}
       >
         {props.link && (
@@ -36,8 +26,13 @@ const WorkImage = (props: Props) => {
             <MdArrowOutward />
           </div>
         )}
-        <img src={props.image} alt={props.alt} />
-        {isVideo && <video src={video} autoPlay muted playsInline loop></video>}
+        <img
+          src={src}
+          alt={props.alt ? `${props.alt} project preview` : "Project preview"}
+          loading="lazy"
+          decoding="async"
+          onError={() => src !== FALLBACK_IMAGE && setSrc(FALLBACK_IMAGE)}
+        />
       </a>
     </div>
   );
