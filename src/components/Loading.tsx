@@ -10,28 +10,39 @@ const Loading = ({ percent }: { percent: number }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
 
-  if (percent >= 100) {
-    setTimeout(() => {
-      setLoaded(true);
-      setTimeout(() => {
-        setIsLoaded(true);
-      }, 1000);
-    }, 600);
-  }
+  // Scheduling these timers in the render body fired them again on every
+  // re-render (and twice over in StrictMode). Run the completion sequence
+  // from an effect, keyed on the value that triggers it.
+  useEffect(() => {
+    if (percent < 100) return;
+
+    const toLoaded = setTimeout(() => setLoaded(true), 600);
+    const toIsLoaded = setTimeout(() => setIsLoaded(true), 1600);
+    return () => {
+      clearTimeout(toLoaded);
+      clearTimeout(toIsLoaded);
+    };
+  }, [percent]);
 
   useEffect(() => {
+    if (!isLoaded) return;
+    let timer: ReturnType<typeof setTimeout>;
+    let cancelled = false;
+
+    setClicked(true);
     import("./utils/initialFX").then((module) => {
-      if (isLoaded) {
-        setClicked(true);
-        setTimeout(() => {
-          if (module.initialFX) {
-            module.initialFX();
-          }
-          setIsLoading(false);
-        }, 900);
-      }
+      if (cancelled) return;
+      timer = setTimeout(() => {
+        module.initialFX?.();
+        setIsLoading(false);
+      }, 900);
     });
-  }, [isLoaded]);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [isLoaded, setIsLoading]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
     const { currentTarget: target } = e;
