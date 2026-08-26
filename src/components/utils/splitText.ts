@@ -10,9 +10,18 @@ interface ParaElement extends HTMLElement {
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
+// ScrollTrigger.addEventListener has no dedupe, so re-registering the refresh
+// hook on every setSplitText() call stacked one more listener each time and
+// each of those re-entered setSplitText. Register it once, and guard against
+// re-entrancy so a refresh triggered from inside the split cannot recurse.
+let refreshHookRegistered = false;
+let splitting = false;
+
 export default function setSplitText() {
   ScrollTrigger.config({ ignoreMobileResize: true });
   if (window.innerWidth < 900) return;
+  if (splitting) return;
+  splitting = true;
   const paras: NodeListOf<ParaElement> = document.querySelectorAll(".para");
   const titles: NodeListOf<ParaElement> = document.querySelectorAll(".title");
 
@@ -76,5 +85,10 @@ export default function setSplitText() {
     );
   });
 
-  ScrollTrigger.addEventListener("refresh", () => setSplitText());
+  if (!refreshHookRegistered) {
+    refreshHookRegistered = true;
+    ScrollTrigger.addEventListener("refresh", () => setSplitText());
+  }
+
+  splitting = false;
 }

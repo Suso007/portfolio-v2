@@ -1,14 +1,24 @@
 import * as THREE from "three";
 import gsap from "gsap";
 
+// setCharTimeline runs again on every resize. A per-call setInterval was never
+// cleared, so each resize leaked another 200ms timer for the page lifetime.
+// One module-level ticker serves every timeline instead.
+let intensity = 0;
+let flickerTicker: ReturnType<typeof setInterval> | undefined;
+
+function startFlickerTicker() {
+  if (flickerTicker !== undefined) return;
+  flickerTicker = setInterval(() => {
+    intensity = Math.random();
+  }, 200);
+}
+
 export function setCharTimeline(
   character: THREE.Object3D<THREE.Object3DEventMap> | null,
   camera: THREE.PerspectiveCamera
 ) {
-  let intensity: number = 0;
-  setInterval(() => {
-    intensity = Math.random();
-  }, 200);
+  startFlickerTicker();
   const tl1 = gsap.timeline({
     scrollTrigger: {
       trigger: ".landing-section",
