@@ -6,7 +6,6 @@
     align-items: center;
     justify-content: center;
     padding: 1rem 1.5rem;
-    font-family: system-ui, -apple-system, sans-serif;
 }
 
 .tech-stack-wrapper {
@@ -35,7 +34,7 @@
 }
 
 .central-text {
-    color: #ffffff;
+    color: var(--text);
     font-size: 2.25rem;
     font-weight: 700;
     letter-spacing: 0.025em;
@@ -52,13 +51,23 @@
 
 .quadrant-card {
     position: relative;
-    border: 1px solid #0dffff;
-    background-color: #0d1420;
+    border: 1px solid var(--border-soft);
+    background:
+        radial-gradient(120% 120% at 50% -10%, var(--teal-glow), transparent 55%),
+        var(--surface);
     padding: 2.5rem 1.5rem 1.5rem;
     /* Extra top padding for the absolute badge */
     border-radius: 1.5rem;
     /* Standard radius for mobile */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 45px -28px rgba(0, 0, 0, 0.95),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: border-color var(--dur-base) var(--ease-out),
+        transform var(--dur-base) var(--ease-out);
+}
+
+.quadrant-card:hover {
+    border-color: var(--teal-glow);
+    transform: translateY(-2px);
 }
 
 .category-badge {
@@ -66,19 +75,21 @@
     top: -1rem;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #ffffff;
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border-soft);
     padding: 0.375rem 1.5rem;
-    border-radius: 9999px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 10px 22px -10px rgba(0, 0, 0, 0.9);
     white-space: nowrap;
     z-index: 10;
 }
 
 .category-title {
-    color: #ff6b81;
-    font-size: 0.875rem;
+    color: var(--accentColor);
+    font-size: 0.8125rem;
     font-weight: 600;
-    letter-spacing: 0.025em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 .icons-grid {
@@ -100,16 +111,17 @@
 
 .icon-svg-wrapper {
     margin-bottom: 0.75rem;
-    transition: transform 0.3s ease, filter 0.3s ease;
+    transition: transform var(--dur-base) var(--ease-out),
+        filter var(--dur-base) var(--ease-out);
 }
 
 .icon-item:hover .icon-svg-wrapper {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 10px var(--accent-glow));
 }
 
 .icon-name {
-    color: #d1d5db;
+    color: var(--text-muted);
     font-size: 0.75rem;
     font-weight: 500;
     white-space: pre-line;
@@ -169,8 +181,11 @@
         transform: translate(-50%, -50%);
         width: 13rem;
         height: 13rem;
-        background-color: #111827;
-        /* Matches container to "mask" the intersection */
+        /* Has to be the page background, not a slate blue, or the "mask"
+           reads as a mismatched disc floating over the quadrants. */
+        background-color: var(--backgroundColor);
+        box-shadow: 0 0 0 1px var(--border-soft),
+            0 0 60px 10px rgba(11, 8, 12, 0.9);
         border-radius: 50%;
         pointer-events: none;
 
