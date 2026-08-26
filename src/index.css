@@ -196,6 +196,12 @@ body {
   border-radius: var(--radius-sm);
 }
 
+/* The skip-link target is a full-bleed section; keep its ring inside the box
+   rather than 4px outside it. */
+.about-section:focus-visible {
+  outline-offset: -2px;
+}
+
 /* Bypass block: the nav sits behind a full-screen loader and a 3D canvas, so
    keyboard users otherwise tab through the entire chrome to reach content. */
 .skip-link {

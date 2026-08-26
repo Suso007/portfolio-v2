@@ -10,8 +10,26 @@ import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "./utils/splitText";
 import GithubGraph from "./GithubGraph";
+import { smoother } from "./Navbar";
 
 const TechStack = lazy(() => import("./TechStack-v2"));
+
+// ScrollSmoother translates #smooth-content rather than scrolling the window,
+// so a plain hash jump lands in the wrong place while it is active. Hand the
+// scroll to the smoother, and move focus explicitly - a hash jump would
+// otherwise be the only thing moving the caret.
+const skipToContent = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const about = document.getElementById("about");
+  if (!about) return;
+
+  event.preventDefault();
+  if (smoother) {
+    smoother.scrollTo(about, true, "top top");
+  } else {
+    about.scrollIntoView();
+  }
+  about.focus();
+};
 
 const MainContainer = ({ children }: PropsWithChildren) => {
   const [isDesktopView, setIsDesktopView] = useState<boolean>(
@@ -41,7 +59,7 @@ const MainContainer = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="container-main">
-      <a className="skip-link" href="#about">
+      <a className="skip-link" href="#about" onClick={skipToContent}>
         Skip to content
       </a>
       <Cursor />
