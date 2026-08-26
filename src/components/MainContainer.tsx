@@ -19,16 +19,25 @@ const MainContainer = ({ children }: PropsWithChildren) => {
   );
 
   useEffect(() => {
+    setSplitText();
+
+    // setSplitText re-splits every .para/.title and rebuilds their
+    // ScrollTriggers, so running it on the raw resize stream stalls the main
+    // thread while the window is being dragged. The breakpoint check is cheap
+    // and stays immediate; the expensive part is debounced.
+    let debounce: ReturnType<typeof setTimeout>;
     const resizeHandler = () => {
-      setSplitText();
       setIsDesktopView(window.innerWidth > 1024);
+      clearTimeout(debounce);
+      debounce = setTimeout(setSplitText, 200);
     };
-    resizeHandler();
+
     window.addEventListener("resize", resizeHandler);
     return () => {
+      clearTimeout(debounce);
       window.removeEventListener("resize", resizeHandler);
     };
-  }, [isDesktopView]);
+  }, []);
 
   return (
     <div className="container-main">
