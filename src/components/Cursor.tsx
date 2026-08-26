@@ -8,6 +8,9 @@ const Cursor = () => {
   useEffect(() => {
     const cursor = cursorRef.current;
     if (!cursor) return;
+    // A large lerping blob following the pointer is exactly the kind of motion
+    // this preference exists to opt out of; CSS hides it, so skip the work too.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let hover = false;
     const mousePos = { x: 0, y: 0 };

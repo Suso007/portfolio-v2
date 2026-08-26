@@ -60,8 +60,8 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="header">
-        <a href="/#" className="navbar-title" data-cursor="disable">
+      <header className="header">
+        <a href="/#" className="navbar-title" data-cursor="disable" aria-label="Susovan Pal - home">
           {profile.initials}
         </a>
         <div className="navbar-contact-icons" data-cursor="disable">
@@ -69,6 +69,7 @@ const Navbar = () => {
             href={`tel:+${profile.phone.replace(/\s/g, "")}`}
             className="navbar-icon-btn"
             title={`Call ${profile.phone}`}
+            aria-label={`Call ${profile.phone}`}
           >
             <HiPhone />
           </a>
@@ -76,6 +77,7 @@ const Navbar = () => {
             href={`mailto:${profile.email}`}
             className="navbar-icon-btn"
             title={profile.email}
+            aria-label={`Email ${profile.email}`}
           >
             <HiEnvelope />
           </a>
@@ -102,7 +104,7 @@ const Navbar = () => {
             </a>
           </li>
         </ul>
-      </div>
+      </header>
 
       <div className="landing-circle1"></div>
       <div className="landing-circle2"></div>

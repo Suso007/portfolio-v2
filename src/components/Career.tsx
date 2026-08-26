@@ -3,7 +3,7 @@ import { careerData } from "../myData/data";
 
 const Career = () => {
   return (
-    <div className="career-section section-container">
+    <section className="career-section section-container" aria-label="Career and experience">
       <div className="career-container">
         <h2>
           My career <span>&</span>
@@ -27,7 +27,7 @@ const Career = () => {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

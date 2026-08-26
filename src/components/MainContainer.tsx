@@ -41,6 +41,9 @@ const MainContainer = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="container-main">
+      <a className="skip-link" href="#about">
+        Skip to content
+      </a>
       <Cursor />
       <Navbar />
       <SocialIcons />
@@ -53,7 +56,7 @@ const MainContainer = ({ children }: PropsWithChildren) => {
             <WhatIDo />
             <Career />
             <Work />
-            <Suspense fallback={<div>Loading....</div>}>
+            <Suspense fallback={<div className="section-fallback">Loading</div>}>
               <TechStack />
               <GithubGraph />
             </Suspense>

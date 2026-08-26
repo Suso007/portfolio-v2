@@ -182,3 +182,122 @@ body {
     font-size: 40px;
   }
 }
+
+/* ==========================================================
+   Accessibility & browser chrome
+   ========================================================== */
+
+/* The site draws its own cursor, so the browser default focus ring was the
+   only remaining keyboard affordance - and several components suppressed it.
+   Give every focusable element a visible, on-brand ring. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--accentColor);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* Bypass block: the nav sits behind a full-screen loader and a 3D canvas, so
+   keyboard users otherwise tab through the entire chrome to reach content. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 10000;
+  padding: 12px 24px;
+  transform: translate(-50%, -130%);
+  background-color: var(--surface-raised);
+  border: 1px solid var(--accentColor);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translate(-50%, 0);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: var(--accent-glow);
+  color: #fff;
+}
+
+/* Scrollbars inside overflow panes (the contribution graph, code-ish blocks)
+   were rendering with the default light-UA chrome against a near-black page. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2c2733 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #2c2733;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #3d3547;
+}
+
+/* Themed stand-in for the lazily loaded sections, replacing an unstyled
+   "Loading...." string that flashed in the middle of the page. */
+.section-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 45vh;
+  color: var(--text-faint);
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.section-fallback::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accentColor);
+  border-radius: 50%;
+  animation: section-fallback-spin 0.8s linear infinite;
+}
+
+@keyframes section-fallback-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cursor-main {
+    display: none;
+  }
+}

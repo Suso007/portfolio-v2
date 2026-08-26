@@ -12,10 +12,10 @@ import { socialIconLinks, profile } from "../myData/data";
 
 // Per-icon brand colors for the glow effect
 const socialIcons = [
-  { href: socialIconLinks.github, Icon: FaGithub, color: "#ffffff" },
-  { href: socialIconLinks.linkedin, Icon: FaLinkedinIn, color: "#0A66C2" },
-  { href: socialIconLinks.twitter, Icon: FaXTwitter, color: "#1DA1F2" },
-  { href: socialIconLinks.instagram, Icon: FaInstagram, color: "#E1306C" },
+  { href: socialIconLinks.github, Icon: FaGithub, color: "#ffffff", label: "GitHub" },
+  { href: socialIconLinks.linkedin, Icon: FaLinkedinIn, color: "#0A66C2", label: "LinkedIn" },
+  { href: socialIconLinks.twitter, Icon: FaXTwitter, color: "#1DA1F2", label: "X (Twitter)" },
+  { href: socialIconLinks.instagram, Icon: FaInstagram, color: "#E1306C", label: "Instagram" },
 ];
 
 const SocialIcons = () => {
@@ -100,15 +100,20 @@ const SocialIcons = () => {
 
   return (
     <div className="icons-section">
-      <div className="social-icons" id="social">
-        {socialIcons.map(({ href, Icon, color }, i) => (
+      <div className="social-icons" id="social" aria-label="Social profiles">
+        {socialIcons.map(({ href, Icon, color, label }, i) => (
           <span
             key={i}
             className="social-icon-span"
             style={{ "--icon-color": color } as React.CSSProperties}
           >
-            <a href={href} target="_blank" rel="noopener noreferrer">
-              <Icon />
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${label} profile (opens in a new tab)`}
+            >
+              <Icon aria-hidden="true" />
             </a>
           </span>
         ))}
@@ -120,9 +125,10 @@ const SocialIcons = () => {
         target="_blank"
         rel="noopener noreferrer"
         className="resume-button"
+        aria-label="Open résumé PDF in a new tab"
       >
         <HoverLinks text="RESUME" />
-        <span>
+        <span aria-hidden="true">
           <TbNotes />
         </span>
       </a>

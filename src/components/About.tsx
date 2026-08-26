@@ -3,12 +3,12 @@ import { aboutData } from "../myData/data";
 
 const About = () => {
   return (
-    <div className="about-section" id="about">
+    <section className="about-section" id="about" aria-label="About me">
       <div className="about-me">
         <h3 className="title">About Me</h3>
         <p className="para">{aboutData.description}</p>
       </div>
-    </div>
+    </section>
   );
 };
 

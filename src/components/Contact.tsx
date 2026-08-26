@@ -4,7 +4,7 @@ import { contactData, socialLinks, profile } from "../myData/data";
 
 const Contact = () => {
   return (
-    <div className="contact-section section-container" id="contact">
+    <footer className="contact-section section-container" id="contact" aria-label="Contact">
       <div className="contact-container">
         <h3>Contact</h3>
         <div className="contact-flex">
@@ -71,7 +71,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

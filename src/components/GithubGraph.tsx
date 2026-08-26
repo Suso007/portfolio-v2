@@ -9,7 +9,7 @@ const GithubGraph = () => {
     };
 
     return (
-        <div className="github-section">
+        <section className="github-section" aria-label="GitHub contribution activity">
             {/* The span triggers the lighter font-weight from your CSS */}
             <h2>Commits Over Time</h2>
 
@@ -23,7 +23,7 @@ const GithubGraph = () => {
                     fontSize={16}
                 />
             </div>
-        </div>
+        </section>
     );
 };
 
