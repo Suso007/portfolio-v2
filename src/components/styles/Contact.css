@@ -35,8 +35,38 @@
 }
 
 a.contact-social {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 25px;
-  border-bottom: 1px solid var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+a.contact-social::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 1px;
+  background-color: var(--accentColor);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+a.contact-social:hover::after {
+  transform: scaleX(1);
+}
+
+a.contact-social svg {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+a.contact-social:hover svg {
+  transform: translate(3px, -3px);
 }
 
 .contact-box h2 {

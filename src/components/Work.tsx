@@ -85,7 +85,10 @@ const Work = () => {
                     rel="noopener noreferrer"
                     aria-label={`View details of ${project.title}`}
                   >
-                    View Details &rarr;
+                    View Details
+                    <span className="view-details-arrow" aria-hidden="true">
+                      &rarr;
+                    </span>
                   </a>
                 )}
               </div>
