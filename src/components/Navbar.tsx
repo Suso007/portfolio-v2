@@ -25,24 +25,39 @@ const Navbar = () => {
     smoother.scrollTop(0);
     smoother.paused(true);
 
-    let links = document.querySelectorAll(".header ul a");
-    links.forEach((elem) => {
-      let element = elem as HTMLAnchorElement;
-      element.addEventListener("click", (e) => {
-        let targetElem = e.currentTarget as HTMLAnchorElement;
-        let section = targetElem.getAttribute("data-href");
+    const header = document.querySelector(".header");
 
-        // Only prevent default and scroll IF it's an internal link with a data-href
-        if (section && window.innerWidth > 1024) {
-          e.preventDefault();
-          smoother.scrollTo(section, true, "top top");
-        }
-      });
-    });
-    window.addEventListener("resize", () => {
+    // Delegated: one listener on the header instead of one per anchor, so it
+    // can actually be removed again on unmount.
+    const onNavClick = (e: Event) => {
+      const target = (e.target as HTMLElement | null)?.closest<HTMLAnchorElement>(
+        ".header ul a"
+      );
+      if (!target) return;
+
+      const section = target.getAttribute("data-href");
+
+      // Only prevent default and scroll IF it's an internal link with a data-href
+      if (section && window.innerWidth > 1024) {
+        e.preventDefault();
+        smoother.scrollTo(section, true, "top top");
+      }
+    };
+
+    const onResize = () => {
       ScrollSmoother.refresh(true);
-    });
+    };
+
+    header?.addEventListener("click", onNavClick);
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      header?.removeEventListener("click", onNavClick);
+      window.removeEventListener("resize", onResize);
+      smoother?.kill();
+    };
   }, []);
+
   return (
     <>
       <div className="header">

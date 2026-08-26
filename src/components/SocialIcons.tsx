@@ -20,49 +20,82 @@ const socialIcons = [
 
 const SocialIcons = () => {
   useEffect(() => {
-    const social = document.getElementById("social") as HTMLElement;
+    const social = document.getElementById("social");
+    if (!social) return;
 
-    social.querySelectorAll("span").forEach((item) => {
-      const elem = item as HTMLElement;
-      const link = elem.querySelector("a") as HTMLElement;
+    type Tracked = {
+      elem: HTMLElement;
+      link: HTMLElement;
+      rect: DOMRect;
+      mouseX: number;
+      mouseY: number;
+      currentX: number;
+      currentY: number;
+    };
 
+    const tracked: Tracked[] = [];
+    social.querySelectorAll("span").forEach((elem) => {
+      const link = elem.querySelector("a");
+      if (!link) return;
       const rect = elem.getBoundingClientRect();
-      let mouseX = rect.width / 2;
-      let mouseY = rect.height / 2;
-      let currentX = 0;
-      let currentY = 0;
+      tracked.push({
+        elem,
+        link,
+        rect,
+        mouseX: rect.width / 2,
+        mouseY: rect.height / 2,
+        currentX: 0,
+        currentY: 0,
+      });
+    });
+    if (!tracked.length) return;
 
-      const updatePosition = () => {
-        currentX += (mouseX - currentX) * 0.1;
-        currentY += (mouseY - currentY) * 0.1;
+    // .icons-section is centered with left:50%, so a resize invalidates every
+    // cached rect. Recompute instead of drifting.
+    const onResize = () => {
+      tracked.forEach((t) => {
+        t.rect = t.elem.getBoundingClientRect();
+      });
+    };
 
-        link.style.setProperty("--siLeft", `${currentX}px`);
-        link.style.setProperty("--siTop", `${currentY}px`);
-
-        requestAnimationFrame(updatePosition);
-      };
-
-      const onMouseMove = (e: MouseEvent) => {
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+    const onMouseMove = (e: MouseEvent) => {
+      tracked.forEach((t) => {
+        const x = e.clientX - t.rect.left;
+        const y = e.clientY - t.rect.top;
 
         if (x < 40 && x > 10 && y < 40 && y > 5) {
-          mouseX = x;
-          mouseY = y;
+          t.mouseX = x;
+          t.mouseY = y;
         } else {
-          mouseX = rect.width / 2;
-          mouseY = rect.height / 2;
+          t.mouseX = t.rect.width / 2;
+          t.mouseY = t.rect.height / 2;
         }
-      };
+      });
+    };
 
-      document.addEventListener("mousemove", onMouseMove);
+    // One rAF loop for every icon rather than one per icon, and a handle we
+    // can actually cancel — the previous cleanup was returned from a forEach
+    // callback, so it was discarded and nothing was ever torn down.
+    let frame = 0;
+    const updatePosition = () => {
+      tracked.forEach((t) => {
+        t.currentX += (t.mouseX - t.currentX) * 0.1;
+        t.currentY += (t.mouseY - t.currentY) * 0.1;
+        t.link.style.setProperty("--siLeft", `${t.currentX}px`);
+        t.link.style.setProperty("--siTop", `${t.currentY}px`);
+      });
+      frame = requestAnimationFrame(updatePosition);
+    };
 
-      updatePosition();
+    document.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("resize", onResize);
+    frame = requestAnimationFrame(updatePosition);
 
-      return () => {
-        elem.removeEventListener("mousemove", onMouseMove);
-      };
-    });
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   return (

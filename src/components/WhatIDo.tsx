@@ -9,20 +9,23 @@ const WhatIDo = () => {
     containerRef.current[index] = el;
   };
   useEffect(() => {
-    if (ScrollTrigger.isTouch) {
-      containerRef.current.forEach((container) => {
-        if (container) {
-          container.classList.remove("what-noTouch");
-          container.addEventListener("click", () => handleClick(container));
-        }
-      });
-    }
+    if (!ScrollTrigger.isTouch) return;
+
+    // The old cleanup passed a brand new arrow function to
+    // removeEventListener, which never matches the one that was added, so
+    // every listener survived unmount. Keep the real handlers around.
+    const bound = containerRef.current.flatMap((container) => {
+      if (!container) return [];
+      container.classList.remove("what-noTouch");
+      const handler = () => handleClick(container);
+      container.addEventListener("click", handler);
+      return [{ container, handler }];
+    });
+
     return () => {
-      containerRef.current.forEach((container) => {
-        if (container) {
-          container.removeEventListener("click", () => handleClick(container));
-        }
-      });
+      bound.forEach(({ container, handler }) =>
+        container.removeEventListener("click", handler)
+      );
     };
   }, []);
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import setCharacter from "./utils/character";
 import setLighting from "./utils/lighting";
@@ -19,7 +19,6 @@ const Scene = () => {
   const sceneRef = useRef(new THREE.Scene());
   const { setLoading } = useLoading();
 
-  const [character, setChar] = useState<THREE.Object3D | null>(null);
   useEffect(() => {
     if (canvasDiv.current) {
       let rect = canvasDiv.current.getBoundingClientRect();
@@ -53,25 +52,34 @@ const Scene = () => {
       let progress = setProgress((value) => setLoading(value));
       const { loadCharacter } = setCharacter(renderer, scene, camera);
 
+      let loadedCharacter: THREE.Object3D | null = null;
+      let disposeHover: (() => void) | void;
+      let introTimer: ReturnType<typeof setTimeout>;
+
+      const onWindowResize = () => {
+        if (!loadedCharacter) return;
+        handleResize(renderer, camera, canvasDiv, loadedCharacter);
+      };
+      window.addEventListener("resize", onWindowResize);
+
       loadCharacter().then((gltf) => {
         if (gltf) {
           const animations = setAnimations(gltf);
-          hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
+          if (hoverDivRef.current) {
+            disposeHover = animations.hover(gltf, hoverDivRef.current);
+          }
           mixer = animations.mixer;
-          let character = gltf.scene;
-          setChar(character);
+          const character = gltf.scene;
+          loadedCharacter = character;
           scene.add(character);
           headBone = character.getObjectByName("spine006") || null;
           screenLight = character.getObjectByName("screenlight") || null;
           progress.loaded().then(() => {
-            setTimeout(() => {
+            introTimer = setTimeout(() => {
               light.turnOnLights();
               animations.startIntro();
             }, 2500);
           });
-          window.addEventListener("resize", () =>
-            handleResize(renderer, camera, canvasDiv, character)
-          );
         }
       });
 
@@ -81,13 +89,17 @@ const Scene = () => {
       const onMouseMove = (event: MouseEvent) => {
         handleMouseMove(event, (x, y) => (mouse = { x, y }));
       };
-      let debounce: number | undefined;
+      let debounce: ReturnType<typeof setTimeout> | undefined;
+      let touchTarget: HTMLElement | null = null;
+      const onTouchMove = (e: TouchEvent) =>
+        handleTouchMove(e, (x, y) => (mouse = { x, y }));
+
       const onTouchStart = (event: TouchEvent) => {
         const element = event.target as HTMLElement;
         debounce = setTimeout(() => {
-          element?.addEventListener("touchmove", (e: TouchEvent) =>
-            handleTouchMove(e, (x, y) => (mouse = { x, y }))
-          );
+          touchTarget?.removeEventListener("touchmove", onTouchMove);
+          touchTarget = element ?? null;
+          touchTarget?.addEventListener("touchmove", onTouchMove);
         }, 200);
       };
 
@@ -98,16 +110,15 @@ const Scene = () => {
         });
       };
 
-      document.addEventListener("mousemove", (event) => {
-        onMouseMove(event);
-      });
+      document.addEventListener("mousemove", onMouseMove);
       const landingDiv = document.getElementById("landingDiv");
       if (landingDiv) {
         landingDiv.addEventListener("touchstart", onTouchStart);
         landingDiv.addEventListener("touchend", onTouchEnd);
       }
+      let frame = 0;
       const animate = () => {
-        requestAnimationFrame(animate);
+        frame = requestAnimationFrame(animate);
         if (headBone) {
           handleHeadRotation(
             headBone,
@@ -126,20 +137,28 @@ const Scene = () => {
         renderer.render(scene, camera);
       };
       animate();
+      const canvasHost = canvasDiv.current;
       return () => {
+        // The render loop and several of these listeners used to outlive the
+        // component: the rAF was never cancelled, and the resize/mousemove
+        // handlers were removed with newly created closures that never matched
+        // the ones registered.
+        cancelAnimationFrame(frame);
         clearTimeout(debounce);
-        scene.clear();
-        renderer.dispose();
-        window.removeEventListener("resize", () =>
-          handleResize(renderer, camera, canvasDiv, character!)
-        );
-        if (canvasDiv.current) {
-          canvasDiv.current.removeChild(renderer.domElement);
-        }
+        clearTimeout(introTimer);
+        window.removeEventListener("resize", onWindowResize);
+        document.removeEventListener("mousemove", onMouseMove);
+        touchTarget?.removeEventListener("touchmove", onTouchMove);
         if (landingDiv) {
-          document.removeEventListener("mousemove", onMouseMove);
           landingDiv.removeEventListener("touchstart", onTouchStart);
           landingDiv.removeEventListener("touchend", onTouchEnd);
+        }
+        disposeHover?.();
+        mixer?.stopAllAction();
+        scene.clear();
+        renderer.dispose();
+        if (canvasHost?.contains(renderer.domElement)) {
+          canvasHost.removeChild(renderer.domElement);
         }
       };
     }

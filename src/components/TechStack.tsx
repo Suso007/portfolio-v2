@@ -226,26 +226,40 @@ const TechStack = () => {
 
   useEffect(() => {
     const handleScroll = () => {
+      const work = document.getElementById("work");
+      if (!work) return;
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const threshold = document
-        .getElementById("work")!
-        .getBoundingClientRect().top;
+      const threshold = work.getBoundingClientRect().top;
       setIsActive(scrollY > threshold);
     };
-    document.querySelectorAll(".header a").forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", () => {
-        const interval = setInterval(() => {
-          handleScroll();
-        }, 10);
-        setTimeout(() => {
-          clearInterval(interval);
-        }, 1000);
-      });
-    });
+
+    // Nav clicks are animated by ScrollSmoother, which does not emit scroll
+    // events, so poll briefly afterwards. Delegated and tracked so the timers
+    // and the listener can be torn down.
+    const timers = new Set<ReturnType<typeof setInterval>>();
+    const header = document.querySelector(".header");
+    const onHeaderClick = (e: Event) => {
+      if (!(e.target as HTMLElement | null)?.closest(".header a")) return;
+      const interval = setInterval(handleScroll, 10);
+      timers.add(interval);
+      const stop = setTimeout(() => {
+        clearInterval(interval);
+        timers.delete(interval);
+        timers.delete(stop);
+      }, 1000);
+      timers.add(stop);
+    };
+
+    header?.addEventListener("click", onHeaderClick);
     window.addEventListener("scroll", handleScroll);
     return () => {
+      header?.removeEventListener("click", onHeaderClick);
       window.removeEventListener("scroll", handleScroll);
+      timers.forEach((t) => {
+        clearInterval(t);
+        clearTimeout(t);
+      });
+      timers.clear();
     };
   }, []);
 
