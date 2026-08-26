@@ -1,8 +1,52 @@
 import React from "react";
-import * as SiIcons from "react-icons/si";
-import * as FaIcons from "react-icons/fa";
-import * as DiIcons from "react-icons/di";
+import type { IconType } from "react-icons";
+// Named imports only. `import * as SiIcons from "react-icons/si"` pulls every
+// icon in the pack into the bundle (~6.7 MB for this chunk alone).
+import {
+    SiReact,
+    SiNextdotjs,
+    SiAngular,
+    SiTypescript,
+    SiJavascript,
+    SiNodedotjs,
+    SiExpress,
+    SiDotnet,
+    SiGraphql,
+    SiMongodb,
+    SiPostgresql,
+    SiDocker,
+    SiGooglecloud,
+    SiGit,
+    SiPrisma,
+    SiSupabase,
+} from "react-icons/si";
+import { FaHtml5, FaCss3, FaAws } from "react-icons/fa";
+import { DiMsqlServer } from "react-icons/di";
 import "./styles/TechStack.css"; // Ensure this path matches your CSS file
+
+// Only the icons this section actually renders.
+const iconRegistry: Record<string, IconType> = {
+    FaHtml5,
+    FaCss3,
+    FaAws,
+    SiReact,
+    SiNextdotjs,
+    SiAngular,
+    SiTypescript,
+    SiJavascript,
+    SiNodedotjs,
+    SiExpress,
+    SiDotnet,
+    SiGraphql,
+    SiMongodb,
+    SiPostgresql,
+    SiDocker,
+    SiGooglecloud,
+    SiGit,
+    SiPrisma,
+    SiSupabase,
+    DiMsqlServer,
+};
 
 // --- Types ---
 export interface TechItem {
@@ -80,11 +124,7 @@ const IconComponent: React.FC<{ iconName: string; color: string; size: number }>
     color,
     size,
 }) => {
-    const Si = SiIcons as Record<string, React.ElementType>;
-    const Fa = FaIcons as Record<string, React.ElementType>;
-    const Di = DiIcons as Record<string, React.ElementType>;
-
-    const Icon = Si[iconName] || Fa[iconName] || Di[iconName];
+    const Icon = iconRegistry[iconName];
     return Icon ? <Icon color={color} size={size} /> : null;
 };
 
