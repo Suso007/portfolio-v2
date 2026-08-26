@@ -77,10 +77,17 @@ const Work = () => {
                 <h4>Tools &amp; Features</h4>
                 <p>{project.tools}</p>
 
-                {/* NEW: View Details Link */}
-                <a href={project.link || "#"} className="view-details-btn">
-                  View Details &rarr;
-                </a>
+                {project.link && (
+                  <a
+                    href={project.link}
+                    className="view-details-btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View details of ${project.title}`}
+                  >
+                    View Details &rarr;
+                  </a>
+                )}
               </div>
               <WorkImage image={project.image} alt={project.title} />
             </div>

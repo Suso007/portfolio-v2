@@ -29,13 +29,9 @@ export const socialLinks = {
   instagram: "https://www.instagram.com/susovanpal007",
 };
 
-// Social icon links (used in SocialIcons component with icon library)
-export const socialIconLinks = {
-  github: "https://github.com/Suso007",
-  linkedin: "https://www.linkedin.com/in/susovan-pal-009a42304",
-  twitter: "https://x.com/pal_susovan7",
-  instagram: "https://www.instagram.com/susovanpal007",
-};
+// Alias kept for the SocialIcons component. Previously a byte-for-byte copy of
+// socialLinks, so the two drifted apart the moment either was edited.
+export const socialIconLinks = socialLinks;
 
 // ----------------------------
 // About Section

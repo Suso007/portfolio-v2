@@ -27,6 +27,7 @@ const Contact = () => {
             <a
               href={socialLinks.github}
               target="_blank"
+              rel="noopener noreferrer"
               data-cursor="disable"
               className="contact-social"
             >
@@ -35,6 +36,7 @@ const Contact = () => {
             <a
               href={socialLinks.linkedin}
               target="_blank"
+              rel="noopener noreferrer"
               data-cursor="disable"
               className="contact-social"
             >
@@ -43,6 +45,7 @@ const Contact = () => {
             <a
               href={socialLinks.twitter}
               target="_blank"
+              rel="noopener noreferrer"
               data-cursor="disable"
               className="contact-social"
             >
@@ -51,6 +54,7 @@ const Contact = () => {
             <a
               href={socialLinks.instagram}
               target="_blank"
+              rel="noopener noreferrer"
               data-cursor="disable"
               className="contact-social"
             >
