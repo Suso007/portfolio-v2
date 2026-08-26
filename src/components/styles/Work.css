@@ -41,7 +41,7 @@
   flex-direction: column;
   width: 600px;
   box-sizing: border-box;
-  border-right: 1px solid #363636;
+  border-right: 1px solid var(--border);
   flex-shrink: 0;
   gap: 50px;
   justify-content: start;
@@ -56,7 +56,7 @@
   content: "";
   width: calc(50000vw);
   height: 1px;
-  background-color: #363636;
+  background-color: var(--border);
   position: absolute;
   left: 50%;
   top: 0;
@@ -93,7 +93,7 @@
 
 .work-info p {
   font-weight: 200;
-  color: #adacac;
+  color: var(--text-muted);
   margin: 0;
   margin-top: 3px;
   width: 90%;
@@ -233,7 +233,7 @@
     width: 100%;
     padding: 0 0 40px 0;
     border-right: none;
-    border-bottom: 1px solid #363636;
+    border-bottom: 1px solid var(--border);
     /* Separator for mobile */
     flex-direction: column;
     /* Keep text above image consistently */

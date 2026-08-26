@@ -1,14 +1,61 @@
 /* The Geist stylesheet is linked from index.html with preconnect hints;
    a CSS @import here would hide it behind an extra round trip. */
 :root {
+  /* ==========================================================
+     Design tokens
+     Every value here is one that was already in use somewhere in
+     the stylesheets - this is a naming layer, not a restyle.
+     ========================================================== */
+
+  /* Brand accent (lavender) */
+  --accentColor: #c2a4ff;
+  --accent-soft: #d8c4ff;
+  --accent-strong: #cbb1ff;
+  --accent-glow: rgba(194, 164, 255, 0.32);
+
+  /* Secondary ramp (teal -> cyan), used by the 3D rig and section headings */
+  --teal-100: #a5f3fc;
+  --teal-200: #67e8f9;
+  --teal-300: #5eead4;
+  --teal-400: #2dd4bf;
+  --teal-500: #22d3ee;
+  --teal-600: #14b8a6;
+  --teal-700: #0d9488;
+  --teal-glow: rgba(45, 212, 191, 0.28);
+
+  /* Surfaces */
+  --backgroundColor: #0b080c;
+  --surface: #0f1117;
+  --surface-raised: #141821;
+  --border: #363636;
+  --border-soft: rgba(255, 255, 255, 0.09);
+
+  /* Text */
+  --text: #eae5ec;
+  --text-dim: #ccc;
+  --text-muted: #adacac;
+  --text-faint: #5e5e5e;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 0.18s;
+  --dur-base: 0.3s;
+  --dur-slow: 0.6s;
+
   font-family: "Geist", sans-serif;
 
   font-optical-sizing: auto;
   font-style: normal;
   line-height: 1.5;
   scroll-behavior: smooth;
-  color-scheme: light dark;
-  color: #eae5ec;
+  color-scheme: dark;
+  color: var(--text);
   background-color: var(--backgroundColor);
 
   font-synthesis: none;
@@ -18,8 +65,6 @@
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  --accentColor: #c2a4ff;
-  --backgroundColor: #0b080c;
   --vh: 100vh;
   --vh: 100svh;
 }
