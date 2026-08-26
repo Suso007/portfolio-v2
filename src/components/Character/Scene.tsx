@@ -12,6 +12,7 @@ import {
 } from "./utils/mouseUtils";
 import setAnimations from "./utils/animationUtils";
 import { setProgress } from "../Loading";
+import { CharacterMesh, isCharacterMesh } from "./utils/types";
 
 const Scene = () => {
   const canvasDiv = useRef<HTMLDivElement | null>(null);
@@ -21,8 +22,8 @@ const Scene = () => {
 
   useEffect(() => {
     if (canvasDiv.current) {
-      let rect = canvasDiv.current.getBoundingClientRect();
-      let container = { width: rect.width, height: rect.height };
+      const rect = canvasDiv.current.getBoundingClientRect();
+      const container = { width: rect.width, height: rect.height };
       const aspect = container.width / container.height;
       const scene = sceneRef.current;
 
@@ -43,13 +44,13 @@ const Scene = () => {
       camera.updateProjectionMatrix();
 
       let headBone: THREE.Object3D | null = null;
-      let screenLight: any | null = null;
+      let screenLight: CharacterMesh | null = null;
       let mixer: THREE.AnimationMixer;
 
       const clock = new THREE.Clock();
 
       const light = setLighting(scene);
-      let progress = setProgress((value) => setLoading(value));
+      const progress = setProgress((value) => setLoading(value));
       const { loadCharacter } = setCharacter(renderer, scene, camera);
 
       let loadedCharacter: THREE.Object3D | null = null;
@@ -73,7 +74,8 @@ const Scene = () => {
           loadedCharacter = character;
           scene.add(character);
           headBone = character.getObjectByName("spine006") || null;
-          screenLight = character.getObjectByName("screenlight") || null;
+          const light3d = character.getObjectByName("screenlight");
+          screenLight = isCharacterMesh(light3d) ? light3d : null;
           progress.loaded().then(() => {
             introTimer = setTimeout(() => {
               light.turnOnLights();
@@ -81,7 +83,7 @@ const Scene = () => {
             }, 2500);
           });
         }
-      });
+      }).catch((error) => console.error("Character failed to load:", error));
 
       let mouse = { x: 0, y: 0 },
         interpolation = { x: 0.1, y: 0.2 };
@@ -162,7 +164,7 @@ const Scene = () => {
         }
       };
     }
-  }, []);
+  }, [setLoading]);
 
   return (
     <>

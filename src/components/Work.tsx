@@ -10,7 +10,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 const Work = () => {
   useGSAP(() => {
     // matchMedia allows us to only run this GSAP animation on desktop
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
     mm.add("(min-width: 1025px)", () => {
       let translateX: number = 0;
