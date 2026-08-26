@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
-
+/* The Geist stylesheet is linked from index.html with preconnect hints;
+   a CSS @import here would hide it behind an extra round trip. */
 :root {
   font-family: "Geist", sans-serif;
 
