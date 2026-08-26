@@ -4,14 +4,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    place-items: center;
     justify-content: center;
     position: relative;
     opacity: 1;
     height: auto;
     margin: auto;
-    padding: 0px;
-    /* Slightly adjusted padding so it flows nicely */
+    padding: 0 24px;
+    box-sizing: border-box;
 }
 
 .github-section h2 {
@@ -19,7 +18,7 @@
     line-height: 70px;
     font-weight: 400;
     text-align: center;
-    background: linear-gradient(0deg, #0d9488, #ffffff);
+    background: linear-gradient(0deg, var(--teal-700), #ffffff);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -28,9 +27,70 @@
     margin-bottom: 70px;
 }
 
-.github-section h2>span {
-    font-family: "Geist", sans-serif;
-    font-weight: 300;
+/* ── The card ───────────────────────────────────────────────
+   Surface, hairline and glow are tuned to the same palette as the
+   rest of the page rather than the stray pink the markup asked for. */
+.github-graph-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    padding: 28px;
+    box-sizing: border-box;
+    border-radius: var(--radius-lg);
+    background:
+        radial-gradient(120% 140% at 50% -30%, rgba(45, 212, 191, 0.1), transparent 62%),
+        var(--surface);
+    box-shadow:
+        0 24px 60px -34px rgba(0, 0, 0, 0.95),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Gradient hairline: a masked 1px ring, so the border can carry the
+   accent-to-teal ramp instead of a flat colour. */
+.github-graph-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(135deg,
+            var(--accent-glow) 0%,
+            var(--border-soft) 38%,
+            var(--border-soft) 62%,
+            var(--teal-glow) 100%);
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+}
+
+/* A full year of squares is ~1000px wide, so it overflowed on tablets too -
+   the old rule only allowed scrolling below 600px. */
+.github-graph-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+}
+
+/* ── Calendar internals ── */
+.github-graph-container .react-activity-calendar__legend-month,
+.github-graph-container .react-activity-calendar__legend-weekday {
+    fill: var(--text-muted);
+}
+
+.github-graph-container .react-activity-calendar__footer,
+.github-graph-container .react-activity-calendar__count {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.github-graph-container .react-activity-calendar__scroll-container {
+    padding-top: 2px;
 }
 
 /* --- Responsive Styles for Header --- */
@@ -44,15 +104,13 @@
 
 @media only screen and (max-width: 1025px) {
     .github-section {
-        padding: 70px 0px;
+        padding: 70px 24px;
     }
 }
 
 @media only screen and (max-width: 600px) {
     .github-section {
         padding-top: 50px;
-        align-items: center;
-        /* Keep it centered on mobile for the graph */
     }
 
     .github-section h2 {
@@ -60,11 +118,11 @@
         font-size: 45px;
         line-height: 45px;
         margin-top: 0px;
+        margin-bottom: 45px;
     }
 
-    /* Make sure the calendar wrapper scrolls horizontally on tiny screens */
     .github-graph-container {
-        max-width: 90vw;
-        overflow-x: auto;
+        padding: 18px;
+        border-radius: var(--radius-md);
     }
 }

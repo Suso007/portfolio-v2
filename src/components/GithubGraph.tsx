@@ -10,18 +10,23 @@ const GithubGraph = () => {
 
     return (
         <section className="github-section" aria-label="GitHub contribution activity">
-            {/* The span triggers the lighter font-weight from your CSS */}
             <h2>Commits Over Time</h2>
 
-            <div className="github-graph-container p-6 bg-[#0d1420] border border-[#ff6b81] rounded-2xl shadow-lg">
-                <GitHubCalendar
-                    username="Suso007"
-                    colorScheme="dark"
-                    theme={explicitTheme}
-                    blockSize={16}
-                    blockMargin={6}
-                    fontSize={16}
-                />
+            {/* These used to be Tailwind utility classes (p-6, bg-[#0d1420],
+                border-[#ff6b81], rounded-2xl, shadow-lg). Tailwind is not
+                installed, so none of them applied and the calendar rendered
+                with no card at all. Styled in GithubGraph.css instead. */}
+            <div className="github-graph-container">
+                <div className="github-graph-scroll">
+                    <GitHubCalendar
+                        username="Suso007"
+                        colorScheme="dark"
+                        theme={explicitTheme}
+                        blockSize={16}
+                        blockMargin={6}
+                        fontSize={16}
+                    />
+                </div>
             </div>
         </section>
     );
