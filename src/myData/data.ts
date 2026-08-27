@@ -138,7 +138,7 @@ export const projectsData = [
     category: "School Management System (Web + Mobile Platform) ",
     tools: "Node.js (backend services), GraphQL, Next.js (admin application), React Native (mobile apps), PostgreSQL (data management), Cashfree Payments (fee transactions), RBAC (access control), real-time notifications",
     image: "/images/nextorg.png",
-    link: "https://school.nextorg.in/",
+    link: "https://nextorg.in/",
   },
   {
     title: "Biometric Data Collection Microservice",
