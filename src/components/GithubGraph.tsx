@@ -16,18 +16,14 @@ const GithubGraph = () => {
                 border-[#ff6b81], rounded-2xl, shadow-lg). Tailwind is not
                 installed, so none of them applied and the calendar rendered
                 with no card at all. Styled in GithubGraph.css instead. */}
-            <div className="github-graph-container">
-                <div className="github-graph-scroll">
-                    <GitHubCalendar
-                        username="Suso007"
-                        colorScheme="dark"
-                        theme={explicitTheme}
-                        blockSize={16}
-                        blockMargin={6}
-                        fontSize={16}
-                    />
-                </div>
-            </div>
+            <GitHubCalendar
+                username="Suso007"
+                colorScheme="dark"
+                theme={explicitTheme}
+                blockSize={16}
+                blockMargin={6}
+                fontSize={16}
+            />
         </section>
     );
 };
