@@ -3,11 +3,17 @@ import { DRACOLoader, GLTF, GLTFLoader } from "three-stdlib";
 import { setCharTimeline, setAllTimeline } from "../../utils/GsapScroll";
 import { decryptFile } from "./decrypt";
 import { isCharacterMesh } from "./types";
+import disposeObject3D from "./disposeUtils";
 
 const setCharacter = (
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
-  camera: THREE.PerspectiveCamera
+  camera: THREE.PerspectiveCamera,
+  // Decrypting and parsing the model takes seconds. If the mount that started
+  // the load is gone by the time it lands, everything below - compiling
+  // against a disposed renderer, and above all building a second set of
+  // scroll timelines - must not happen.
+  isCancelled: () => boolean = () => false
 ) => {
   const loader = new GLTFLoader();
   const dracoLoader = new DRACOLoader();
@@ -26,8 +32,18 @@ const setCharacter = (
         loader.load(blobUrl, resolve, undefined, reject);
       });
 
+      if (isCancelled()) {
+        disposeObject3D(gltf.scene);
+        return null;
+      }
+
       const character = gltf.scene;
       await renderer.compileAsync(character, camera, scene);
+
+      if (isCancelled()) {
+        disposeObject3D(character);
+        return null;
+      }
 
       character.traverse((child) => {
         if (!isCharacterMesh(child)) return;

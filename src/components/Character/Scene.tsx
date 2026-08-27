@@ -13,11 +13,11 @@ import {
 import setAnimations from "./utils/animationUtils";
 import { setProgress } from "../Loading";
 import { CharacterMesh, isCharacterMesh } from "./utils/types";
+import disposeObject3D from "./utils/disposeUtils";
 
 const Scene = () => {
   const canvasDiv = useRef<HTMLDivElement | null>(null);
   const hoverDivRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef(new THREE.Scene());
   const { setLoading } = useLoading();
 
   useEffect(() => {
@@ -25,7 +25,16 @@ const Scene = () => {
       const rect = canvasDiv.current.getBoundingClientRect();
       const container = { width: rect.width, height: rect.height };
       const aspect = container.width / container.height;
-      const scene = sceneRef.current;
+
+      // One Scene per mount. This used to live in a ref, so every mount shared
+      // a single Scene - and because loadCharacter takes seconds, a load
+      // started by a mount that had already been torn down still ran
+      // scene.add() on the Scene the *current* mount was rendering. That put a
+      // second character in the shot, frozen in its bind pose because its
+      // mixer belonged to the dead mount. StrictMode makes it happen on every
+      // dev page load; crossing the 1024px breakpoint does it in production.
+      const scene = new THREE.Scene();
+      let disposed = false;
 
       const renderer = new THREE.WebGLRenderer({
         alpha: true,
@@ -50,8 +59,16 @@ const Scene = () => {
       const clock = new THREE.Clock();
 
       const light = setLighting(scene);
-      const progress = setProgress((value) => setLoading(value));
-      const { loadCharacter } = setCharacter(renderer, scene, camera);
+      // A discarded mount must not keep driving the loading percentage.
+      const progress = setProgress((value) => {
+        if (!disposed) setLoading(value);
+      });
+      const { loadCharacter } = setCharacter(
+        renderer,
+        scene,
+        camera,
+        () => disposed
+      );
 
       let loadedCharacter: THREE.Object3D | null = null;
       let disposeHover: (() => void) | void;
@@ -64,7 +81,7 @@ const Scene = () => {
       window.addEventListener("resize", onWindowResize);
 
       loadCharacter().then((gltf) => {
-        if (gltf) {
+        if (gltf && !disposed) {
           const animations = setAnimations(gltf);
           if (hoverDivRef.current) {
             disposeHover = animations.hover(gltf, hoverDivRef.current);
@@ -82,8 +99,14 @@ const Scene = () => {
               animations.startIntro();
             }, 2500);
           });
+        } else if (gltf) {
+          // Landed after teardown: never joins the live scene.
+          disposeObject3D(gltf.scene);
         }
-      }).catch((error) => console.error("Character failed to load:", error));
+      }).catch((error) => {
+        if (disposed) return;
+        console.error("Character failed to load:", error);
+      });
 
       let mouse = { x: 0, y: 0 },
         interpolation = { x: 0.1, y: 0.2 };
@@ -145,6 +168,8 @@ const Scene = () => {
         // component: the rAF was never cancelled, and the resize/mousemove
         // handlers were removed with newly created closures that never matched
         // the ones registered.
+        disposed = true;
+        progress.stop();
         cancelAnimationFrame(frame);
         clearTimeout(debounce);
         clearTimeout(introTimer);
@@ -157,6 +182,7 @@ const Scene = () => {
         }
         disposeHover?.();
         mixer?.stopAllAction();
+        if (loadedCharacter) disposeObject3D(loadedCharacter);
         scene.clear();
         renderer.dispose();
         if (canvasHost?.contains(renderer.domElement)) {
