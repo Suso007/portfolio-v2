@@ -38,7 +38,7 @@ export const socialIconLinks = socialLinks;
 // ----------------------------
 export const aboutData = {
   description:
-    `Passionate about building web applications thats actually work well and solve real problems. Highly skilled in programming design,
+    `Passionate about building solutions thats actually work well and solve real problems. Highly skilled in programming design,
       development, and implementation of functional specifications. I’m always learning new tools and approaches because technology
       moves fast, and I find it exciting to apply fresh ideas to deliver solutions that users find valuable and easy to use.`,
 };
@@ -82,6 +82,8 @@ export const whatIDoData = [
     skills: [
       "React.js",
       "Next.js",
+      "React Native",
+      "Expo",
       "TypeScript",
       "JavaScript",
       "Material UI",
